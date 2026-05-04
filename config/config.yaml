@@ -41,7 +41,7 @@ app:
 # ===============================================================
 schedule:
   enabled: true                         # 是否启用调度系统
-  preset: "morning_evening"             # 预设模板名称（见上方说明）
+  preset: "morning_evening_copy"             # 预设模板名称（见上方说明）
 
 
 # ===============================================================
@@ -263,7 +263,7 @@ display:
   standalone:
     platforms: ["zhihu","wallstreetcn-hot","toutiao","bilibili-hot-search","baidu","thepaper","cls-hot","douyin","tieba","ifeng","weibo"] # 热榜平台 ID 列表（如 ["zhihu", "weibo"]）
     rss_feeds: ["hacker-news","ruanyifeng","yahoo-finance"] # RSS 源 ID 列表（如 ["hacker-news"]）
-    max_items: 3                     # 每个源最多展示条数（0=不限制）
+    max_items: 1                     # 每个源最多展示条数（0=不限制）
 
 
 # ===============================================================
@@ -402,7 +402,7 @@ ai:
 
   api_key: "tp-cwlo56ub71xp1urrj1wnjkulnvl2dk7ycp6hlj2cejmg6sl7"                       # API Key（建议使用环境变量 AI_API_KEY）
   
-  api_base: "https://token-plan-cn.xiaomimimo.com/anthropic"                      # 自定义 API 端点（可选，大多数情况留空）
+  api_base: "https://token-plan-cn.xiaomimimo.com/v1"                      # 自定义 API 端点（可选，大多数情况留空）
                                     # 示例: https://api.openai.com/v1（自建代理或兼容接口）
                                     #
                                     # 💡 超级重要：连接任意兼容 OpenAI 协议的模型商
@@ -475,7 +475,7 @@ ai_analysis:
   #   - 推送 incremental（避免重复），AI 分析 current（看当前榜单变化）
   #   - 推送 current（实时热点），AI 分析 daily（全天总结）
   #
-  mode: "daily"
+  mode: "current"
 
   # 分析内容配置
   max_news_for_analysis: 150        # 热榜+RSS 合计参与分析的新闻数量上限（控制成本关键项）
