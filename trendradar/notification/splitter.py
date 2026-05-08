@@ -1747,19 +1747,17 @@ def _format_standalone_platform_item(item: Dict, index: int, format_type: str, r
             item_line += f" {count_display}"
 
     elif format_type in ("wework", "bark"):
-        # 企业微信和 Bark：简化链接，只显示域名
-        item_line = f"  {index}. {title}"
+        # 企业微信和 Bark：使用 markdown 链接格式
+        if url:
+            item_line = f"  {index}. [{title}]({url})"
+        else:
+            item_line = f"  {index}. {title}"
         if rank_display:
             item_line += f" {rank_display}"
         if time_display:
             item_line += f" - {time_display}"
         if count_display:
             item_line += f" {count_display}"
-        if url:
-            from urllib.parse import urlparse
-            parsed = urlparse(url)
-            domain = parsed.netloc.replace('www.', '')
-            item_line += f"\n    🔗 {domain}"
 
     else:
         item_line = f"  {index}. {title}"
@@ -1820,15 +1818,10 @@ def _format_standalone_rss_item(
         if meta_str:
             item_line += f" _{meta_str}_"
     elif format_type in ("wework", "bark"):
-        # 企业微信和 Bark：简化链接，只显示域名
-        item_line = f"  {index}. {title}"
+        # 企业微信和 Bark：使用 markdown 链接格式
+        item_line = f"  {index}. [{title}]({url})" if url else f"  {index}. {title}"
         if meta_str:
             item_line += f" `{meta_str}`"
-        if url:
-            from urllib.parse import urlparse
-            parsed = urlparse(url)
-            domain = parsed.netloc.replace('www.', '')
-            item_line += f"\n    🔗 {domain}"
     else:
         # dingtalk, ntfy
         item_line = f"  {index}. {title}"
