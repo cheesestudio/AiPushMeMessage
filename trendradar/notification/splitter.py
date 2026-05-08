@@ -1711,10 +1711,7 @@ def _format_standalone_platform_item(item: Dict, index: int, format_type: str, r
 
     # 根据格式类型构建条目行（复用热点词汇统计区样式）
     if format_type == "feishu":
-        if url:
-            item_line = f"  {index}. [{title}]({url})"
-        else:
-            item_line = f"  {index}. {title}"
+        item_line = f"  {index}. {title}"
         if rank_display:
             item_line += f" {rank_display}"
         if time_display:
@@ -1723,10 +1720,7 @@ def _format_standalone_platform_item(item: Dict, index: int, format_type: str, r
             item_line += f" <font color='green'>{count_display}</font>"
 
     elif format_type == "dingtalk":
-        if url:
-            item_line = f"  {index}. [{title}]({url})"
-        else:
-            item_line = f"  {index}. {title}"
+        item_line = f"  {index}. {title}"
         if rank_display:
             item_line += f" {rank_display}"
         if time_display:
@@ -1735,10 +1729,7 @@ def _format_standalone_platform_item(item: Dict, index: int, format_type: str, r
             item_line += f" {count_display}"
 
     elif format_type == "telegram":
-        if url:
-            item_line = f"  {index}. {title} ({url})"
-        else:
-            item_line = f"  {index}. {title}"
+        item_line = f"  {index}. {title}"
         if rank_display:
             item_line += f" {rank_display}"
         if time_display:
@@ -1747,10 +1738,7 @@ def _format_standalone_platform_item(item: Dict, index: int, format_type: str, r
             item_line += f" {count_display}"
 
     elif format_type == "slack":
-        if url:
-            item_line = f"  {index}. <{url}|{title}>"
-        else:
-            item_line = f"  {index}. {title}"
+        item_line = f"  {index}. {title}"
         if rank_display:
             item_line += f" {rank_display}"
         if time_display:
@@ -1758,12 +1746,23 @@ def _format_standalone_platform_item(item: Dict, index: int, format_type: str, r
         if count_display:
             item_line += f" {count_display}"
 
-    else:
-        # wework, bark, ntfy
+    elif format_type in ("wework", "bark"):
+        # 企业微信和 Bark：简化链接，只显示域名
+        item_line = f"  {index}. {title}"
+        if rank_display:
+            item_line += f" {rank_display}"
+        if time_display:
+            item_line += f" - {time_display}"
+        if count_display:
+            item_line += f" {count_display}"
         if url:
-            item_line = f"  {index}. [{title}]({url})"
-        else:
-            item_line = f"  {index}. {title}"
+            from urllib.parse import urlparse
+            parsed = urlparse(url)
+            domain = parsed.netloc.replace('www.', '')
+            item_line += f"\n    🔗 {domain}"
+
+    else:
+        item_line = f"  {index}. {title}"
         if rank_display:
             item_line += f" {rank_display}"
         if time_display:
@@ -1809,32 +1808,30 @@ def _format_standalone_rss_item(
 
     # 根据格式类型构建条目行
     if format_type == "feishu":
-        if url:
-            item_line = f"  {index}. [{title}]({url})"
-        else:
-            item_line = f"  {index}. {title}"
+        item_line = f"  {index}. {title}"
         if meta_str:
             item_line += f" <font color='grey'>- {meta_str}</font>"
     elif format_type == "telegram":
-        if url:
-            item_line = f"  {index}. {title} ({url})"
-        else:
-            item_line = f"  {index}. {title}"
+        item_line = f"  {index}. {title}"
         if meta_str:
             item_line += f" - {meta_str}"
     elif format_type == "slack":
-        if url:
-            item_line = f"  {index}. <{url}|{title}>"
-        else:
-            item_line = f"  {index}. {title}"
+        item_line = f"  {index}. {title}"
         if meta_str:
             item_line += f" _{meta_str}_"
-    else:
-        # wework, bark, ntfy, dingtalk
+    elif format_type in ("wework", "bark"):
+        # 企业微信和 Bark：简化链接，只显示域名
+        item_line = f"  {index}. {title}"
+        if meta_str:
+            item_line += f" `{meta_str}`"
         if url:
-            item_line = f"  {index}. [{title}]({url})"
-        else:
-            item_line = f"  {index}. {title}"
+            from urllib.parse import urlparse
+            parsed = urlparse(url)
+            domain = parsed.netloc.replace('www.', '')
+            item_line += f"\n    🔗 {domain}"
+    else:
+        # dingtalk, ntfy
+        item_line = f"  {index}. {title}"
         if meta_str:
             item_line += f" `{meta_str}`"
 
