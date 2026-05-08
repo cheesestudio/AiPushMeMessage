@@ -102,21 +102,16 @@ def format_title_for_platform(
 
         return result
 
-    elif platform in ("wework", "bark"):
-        # WeWork 和 Bark 使用 markdown 格式
-        if link_url:
-            formatted_title = f"[{cleaned_title}]({link_url})"
-        else:
-            formatted_title = cleaned_title
-
+    elif platform == "wework":
+        # WeWork 使用 markdown 格式，简化链接显示
         title_prefix = "🆕 " if title_data.get("is_new") else ""
 
         if show_source:
-            result = f"[{title_data['source_name']}] {title_prefix}{formatted_title}"
+            result = f"[{title_data['source_name']}] {title_prefix}{cleaned_title}"
         elif show_keyword and keyword:
-            result = f"[{keyword}] {title_prefix}{formatted_title}"
+            result = f"[{keyword}] {title_prefix}{cleaned_title}"
         else:
-            result = f"{title_prefix}{formatted_title}"
+            result = f"{title_prefix}{cleaned_title}"
 
         if rank_display:
             result += f" {rank_display}"
@@ -124,6 +119,14 @@ def format_title_for_platform(
             result += f" - {title_data['time_display']}"
         if title_data["count"] > 1:
             result += f" ({title_data['count']}次)"
+
+        # 链接单独换行显示（避免消息太长）
+        if link_url:
+            # 简化域名作为链接提示
+            from urllib.parse import urlparse
+            parsed = urlparse(link_url)
+            domain = parsed.netloc.replace('www.', '')
+            result += f"\n🔗 {domain}"
 
         return result
 
